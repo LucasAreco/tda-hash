@@ -28,12 +28,17 @@ size_t djb2(void *data) {
 		hash = ((hash << 5) + hash) + (size_t)c;
 	}
 
-	return hash;
-	
+	return hash;	
 }
 
+size_t numero_hash(hash_t* hash, size_t (*funcion_hash)(void* data), const char* clave) 
+{
+    return funcion_hash((void*)clave) % hash->capacidad;
+}
+
+
 struct par* obtener_par(hash_t* hash, const char *clave) {
-    size_t posicion = djb2((void*)clave) % hash->capacidad;
+    size_t posicion = numero_hash(hash, djb2, clave);
     int posiciones_visitadas = 0;
 
     while (hash->pares[posicion].clave != NULL && posiciones_visitadas < hash->capacidad) {
@@ -149,7 +154,7 @@ hash_t* hash_insertar(hash_t *hash, const char *clave, void *elemento, void **an
     }
 
 
-    size_t posicion = djb2((void*)clave) % hash->capacidad;
+    size_t posicion = numero_hash(hash, djb2, clave);
 
     while (hash->pares[posicion].clave != NULL) {
         posicion = (posicion + 1) % hash->capacidad;
@@ -176,7 +181,7 @@ void reemplazar_al_quitar(hash_t *hash, size_t posicion) {
     int posiciones_visitadas = 0;
 
     while (hash->pares[actual].clave != NULL && posiciones_visitadas < hash->capacidad) {
-        size_t nueva_posicion = djb2(hash->pares[actual].clave) % hash->capacidad;
+        size_t nueva_posicion = numero_hash(hash, djb2, hash->pares[actual].clave);
         if (nueva_posicion <= posicion) {
             hash->pares[posicion].clave = copiar_clave(hash->pares[actual].clave);
             if (hash->pares[posicion].clave == NULL) {
@@ -202,7 +207,7 @@ void *hash_quitar(hash_t *hash, const char *clave) {
         return NULL;
     }
 
-    size_t posicion_quitar = djb2((void*)clave) % hash->capacidad;
+    size_t posicion_quitar = numero_hash(hash, djb2, clave);
 
     while (hash->pares[posicion_quitar].clave != NULL) {
         if (strcmp(hash->pares[posicion_quitar].clave, clave) == 0) {
@@ -234,7 +239,7 @@ void* hash_obtener(hash_t* hash, const char* clave) {
         return NULL;
     }
 
-    size_t posicion = djb2((void*)clave) % hash->capacidad;
+    size_t posicion = numero_hash(hash, djb2, clave);
     int posiciones_visitadas = 0;
 
     while (hash->pares[posicion].clave != NULL && posiciones_visitadas < hash->capacidad) {
@@ -291,14 +296,6 @@ void hash_destruir_todo(hash_t *hash, void (*destructor)(void *)) {
 
 void hash_destruir(hash_t *hash)
 {   
-//  for (size_t i = 0; i < hash->capacidad; i++) {
-//         if (hash->pares[i].clave != NULL) {
-//             // char* valor = (char *)(hash->pares[i].valor);
-//             // printf("Posición: %zu, Clave: %s, Valor: %s\n", i, hash->pares[i].clave, valor);
-//             int valor = *(int*)(hash->pares[i].valor);
-//             printf("Posición: %zu, Clave: %s, Valor: %d\n", i, hash->pares[i].clave, valor);
-//         }
-//     }
 	hash_destruir_todo(hash, NULL);
 }
 
@@ -316,7 +313,6 @@ size_t hash_con_cada_clave(hash_t *hash, bool (*f)(const char *clave, void *valo
         if (hash->pares[i].clave) {
             bool funcion = f(hash->pares[i].clave, hash->pares[i].valor, aux);
             iteraciones++;
-
 
             if (!funcion) {
                 return iteraciones;
