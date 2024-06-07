@@ -46,10 +46,10 @@ Una **tabla de hash** es una estructura de datos que facilita la asociación de 
 Gracias a esta implementación, las operaciones de búsqueda, inserción y eliminación en una tabla de hash tienen una complejidad promedio constante, **O(1)**, lo que la convierte en una estructura de datos altamente eficiente. No obstante, la eficiencia de la tabla depende en gran medida de cómo se manejen las colisiones y de la calidad de la función de hash utilizada.
 
 Una buena función de hash debe considerar algunos puntos: 
-    . **Cada clave tiene que tener un valor hash único asociado**. Esto es muy dificil de lograr en la práctica y es probable que varias claves diferentes produzcan el mismo valor hash. 
-    . **Calcular el hash rapidamente**. El tiempo que toma en calcular el hash debe ser en base al tamaño de la entrada y no comprometer la eficiencia del programa, donde justamente usamos una tabla de hash para mejorarla.
-    . **Evitar colisiones**. Esta relacionado con el primer punto, debe minimizar las colisiones. 
-    . **Misma entrada, mismo valor hash**. Siempre que se le ingrese una misma clave, nos tiene que devolver el mismo valor hash. Esto es importante si se quiere actualizar un valor dentro de la tabla (esto dependera de la implementación si se puede actualizar o no), ya que podemos confiar en que se va a acceder a la posición correcta.
+- **Cada clave tiene que tener un valor hash único asociado**. Esto es muy dificil de lograr en la práctica y es probable que varias claves diferentes produzcan el mismo valor hash. 
+- **Calcular el hash rapidamente**. El tiempo que toma en calcular el hash debe ser en base al tamaño de la entrada y no comprometer la eficiencia del programa, donde justamente usamos una tabla de hash para mejorarla.
+- **Evitar colisiones**. Esta relacionado con el primer punto, debe minimizar las colisiones. 
+- **Misma entrada, mismo valor hash**. Siempre que se le ingrese una misma clave, nos tiene que devolver el mismo valor hash. Esto es importante si se quiere actualizar un valor dentro de la tabla (esto dependera de la implementación si se puede actualizar o no), ya que podemos confiar en que se va a acceder a la posición correcta.
 
 Cabe destacar que existen dos tipos principales de tablas de hash: las tablas de hash cerradas con direccionamiento abierto y las tablas de hash abiertas con direccionamiento cerrado. La diferencia esta en donde se almacenan los valores y cómo se resuelven las colisiones, es decir, que decisión toma cuando dos claves distintas generan el mismo valor de hash.
 
